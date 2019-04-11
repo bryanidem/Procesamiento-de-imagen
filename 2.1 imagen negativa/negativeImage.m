@@ -1,5 +1,5 @@
 % obtención del complemento de una imagen.
- 
+
 %cargar la imagen a la variable f (de tipo uint8 con 3 canales)
 f = imread('chest.jpg');
 
