@@ -1,4 +1,7 @@
-
+#//////////////////////////////////////////
+#obtención de complemento de una imagen
+#Autor: Bryan Medina
+#//////////////////////////////////////////
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
