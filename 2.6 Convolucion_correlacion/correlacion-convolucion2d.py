@@ -1,3 +1,9 @@
+#*******************
+#correlacion (también conv)
+#autor: Bryan Medina
+#********************
+
+
 import numpy as np
 import cv2
 
