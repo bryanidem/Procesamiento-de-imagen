@@ -8,50 +8,46 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # ubicacion de la imagen
-sourceImg = cv2.imread('sigure.jpg', 0)
+f = cv2.imread('sigure.jpg', 0)
 
-# valores de intensidad en la imagen de entrada
+#asignamos gamma y obtenemos las constantes c encargadas de mantener a raya los valores del despliegue (0 - 255)
+# en este caso con y obtenemos la función que graficaremos.
+gamma = 0.4
 x = np.array(range(256))
+c = 255/np.power(255, gamma)
+y =  c * np.power(x, gamma)
+
+gamma1 = 1.0
+c1 = 255/np.power(255, gamma1)
+y1 =  c1 * np.power(x, gamma1)
+
+gamma2 = 2.5
+c2 = 255/np.power(255, gamma2)
+y2 =  c2 * np.power(x, gamma2)
+
+#graficamos las funciones
+
+plt.figure()
+plt.title('correción gamma')
+plt.plot(x, y, label = '$\gamma = 0.4$')
+plt.plot(x, y1, label = '$\gamma = 1.0$')
+plt.plot(x, y2, label = '$\gamma = 2.5$')
+plt.legend(loc='upper left')
+plt.xlabel('intensidades de entrada')
+plt.ylabel('intensidades de salida')
+plt.show()
+
+#calculamos la transformacion gamma, con la formulita
+outputImg = np.array(c * np.power(f, gamma), dtype = 'uint8')
+outputImg1 = np.array(c2 * np.power(f, gamma2), dtype = 'uint8')
 
 
-def correccionGama(f, gamma):
-    """ funcion en la cual, a partir de los valores de intensidad x (256), se calcula la potencia con el exponente gamma"""
-    #se calcula c al igual que en el logaritmo, pero pa los cuates es 1
-    c = 255/np.log1p(sourceImg.max())
-
-    #interpolacion lineal para normalizar los valores de entrada y solamente calcular la potencia.
-    f = np.interp(f, (f.min(), f.max()), (0, 1))
-
-    #yup, solo calcular la potencia.
-    y = c * np.power(f, gamma)
-
-    # Vuelvo a poner los valores en el rango de 0 a 255
-    # y = 255 * y
-    y = np.interp(y, (y.min(), y.max()), (0, 255))
-    return y
+cv2.imshow('gamma = 0.5', outputImg)
+cv2.imshow('gamma = 2.0', outputImg1)
+cv2.imshow('entrada', f)
+#cv2.imwrite('punto5.jpg', outputImg)
+#cv2.imwrite('2puntocero.jpg', outputImg1)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 
-def graficar(gamma):
-    """funcion para graficar tanto la imagen de salida, como la funcion de Transformación correspondiente"""
-
-    imagen = correccionGama(sourceImg, gamma)
-    grafica = correccionGama(x, gamma)
-
-    plt.figure()
-    plt.subplot(121)
-    plt.imshow(imagen, cmap='gray')
-    plt.axis('off')
-    plt.title('corrección ' + r'$\gamma = $' + str(gamma))
-
-    plt.subplot(122)
-    plt.plot(x, grafica)
-    plt.xlabel('brillo - f(x, y)')
-    plt.ylabel('brillo - g(x, y)')
-    plt.title('$g(x, y) = c*f(x, y)^\gamma$' + r'     $\gamma = $' + str(gamma))
-
-    plt.show()
-
-
-graficar(0.2)
-graficar(1)
-graficar(5)
