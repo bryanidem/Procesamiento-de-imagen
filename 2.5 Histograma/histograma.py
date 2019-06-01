@@ -21,32 +21,38 @@ def histograma(sourceImage):
 
     #iteraremos sobre cada pixel de la imagen
     width, height = sourceImage.shape
+    totalSize = width*height;
 
     for i in range(width):
         for j in range(height):
             brillo = f[i, j]
-            #aumentamos en 1 el nivel de brillo del pixel actual
-            hist[brillo] += 1
-
+            #aumentamos la columna del histograma correspondiente a ese brillo en particular
+            hist[brillo] += 1    
+    hist = hist/totalSize    
     return x, hist
 
 
 x, histF = histograma(f)
 
 plt.figure()
-plt.plot(x, histF)
+plt.bar(x, histF)
 plt.xlabel('niveles de intensidad')
-plt.ylabel('número de pixeles')
+plt.ylabel('probabilidad de ocurrencia')
 plt.title('histograma')
+
+
+plt.figure()
+plt.imshow(f, cmap = 'gray')
 plt.show()
+
 
 # y buuuueeeno, tambien se puede usar la funcion de opencv y de numpy, ya cada quien
 numpyHistogram, bins = np.histogram(f, 256, [0, 256])
 opencvHistogram = cv2.calcHist([f], [0], None, [256], [0, 256])
 
-plt.figure()
-plt.plot(x, opencvHistogram)
-plt.xlabel('niveles de intensidad')
-plt.ylabel('número de pixeles')
-plt.title('histograma')
-plt.show()
+#plt.figure()
+#plt.plot(x, opencvHistogram)
+#plt.xlabel('niveles de intensidad')
+#plt.ylabel('número de pixeles')
+#plt.title('histograma')
+#plt.show()
