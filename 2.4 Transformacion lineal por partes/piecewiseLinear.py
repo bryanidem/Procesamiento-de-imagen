@@ -7,17 +7,21 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-f = cv2.imread('gordon.jpg', 0)
+f = cv2.imread('C:/Users/bryan/Desktop/image processing python/data/pelvis.jpg', 0)
 
-r1 = 120
-s1 = 1
-r2 = 121
+#defino los puntos (r1, s1), (r2, s2) que formarán la recta que mapeará el rango dinámico de la imagen de entrada, en una de mayor constraste
+
+r1 = 80
+s1 = 0
+r2 = 175
 s2 = 255
 
+#pendientes de las rectas
 a = (s1/r1)
 b = (s2-s1)/(r2-r1)
 c = (255-s2)/(255-r2)
 
+#definición de las rectas
 x1 = np.array(range(r1))
 y1 = a * x1
 
@@ -28,11 +32,10 @@ x3 = np.array(range(r2, 256))
 y3 = c * (x3 - r2) + b * (r2 - r1) + a * r1
 
 
-
 width, height = f.shape
 g = np.zeros((width, height), np.uint8)
 
-
+#asigno los nuevos valores que tendrá la imagen de salida
 for i in range(width):
     for j in range(height):
         if(f[i, j] >= 0 and f[i, j] <= r1):
@@ -48,31 +51,42 @@ for i in range(width):
 
 
 
-
+#grafica donde se muestra la funcion de transformacion
 plt.figure()
 plt.plot(x1, y1, 'r')
 plt.plot(x2, y2, 'g')
 plt.plot(x3, y3, 'b')
-plt.show()
+plt.xlabel('intensidades imagen de entrada')
+plt.ylabel('intensidades imagen de salida')
+plt.title('mapeo de intensidades')
+
+#histograma para visualizar los valores de brillo min y max que presenta la imagen
+fHist, bins = np.histogram(f, 256, [0, 256])
+fHist = fHist/(width*height)
+
+#histograma para visualizar el efecto de la transformación
+gHist, bins = np.histogram(g, 256, [0, 256])
+gHist = gHist/(width*height)
+
+x = np.array(range(256))
+
+#mostrar histogramas
+plt.figure()
+plt.bar(x, fHist)
+plt.xlabel('niveles de intensidad')
+plt.ylabel('ocurrencia')
+plt.title('histograma de f')
 
 plt.figure()
-plt.subplot(1, 2, 1)
-plt.imshow(f, cmap = 'gray')
-plt.axis('off')
-plt.title('imagen de entrada f')
-
-plt.subplot(1, 2, 2)
-plt.imshow(g, cmap = 'gray')
-plt.axis('off')
-plt.title('imagen de salida g')
+plt.bar(x, gHist)
+plt.xlabel('niveles de intensidad')
+plt.ylabel('ocurrencia')
+plt.title('histograma de g')
 plt.show()
 
-
+#mostras imagenes de entrada y salida
 cv2.imshow('f', f)
 cv2.imshow('g', g)
+#cv2.imwrite('pelvisChida.jpg', g)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-#datos de la imagen de entrada
-print("tipo: " + str(f.dtype) + ", tamaño: " + str(f.shape))
-print("tipo: " + str(g.dtype) + ", tamaño: " + str(g.shape))
