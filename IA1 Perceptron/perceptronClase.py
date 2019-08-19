@@ -5,6 +5,9 @@ Created on Sat Aug 17 22:37:50 2019
 @author: Bryan Medina
 
 En este post discuto el algoritmo del perceptrón y explico a grandes rasgos la teoría: https://bryanmed.github.io/perceptron/
+
+basado en el código de: https://www.youtube.com/watch?v=CMtLHs8qb60
+y del libro: https://www.gandhi.com.mx/inteligencia-artificial-2
 """
 
 #librería de métodos númericos
